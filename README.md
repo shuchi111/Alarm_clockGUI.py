@@ -1,4 +1,5 @@
-# Alarm_clockGUI.py
+# Alarm_clockGUI
+---
 I have created an Alarm Clock using Tkinter in Python. 
 
 ⏰⏰Without alarms, several people would oversleep and land up late for work. Alarm clocks may also be useful for keeping sleep schedules regular.
