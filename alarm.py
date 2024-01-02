@@ -1,53 +1,55 @@
-
 from tkinter import *
 from tkinter import messagebox
 import tkinter as tk
-import time, sys
+import time
+import threading
 from pygame import mixer
 from PIL import Image, ImageTk
 
-def alarm():
-    alarm_time=user_input.get()
-    if alarm_time=="":
-        messagebox.askretrycancel("Error Message","Please Enter value")
+def set_alarm():
+    alarm_time = user_input.get()
+    if not alarm_time:
+        messagebox.showerror("Error", "Please enter a valid time")
     else:
-        while True:
-            time.sleep(1)
-            if(alarm_time==time.strftime("%H:%M")):
-                playmusic()
-def playmusic():
+        alarm_thread = threading.Thread(target=alarm, args=(alarm_time,))
+        alarm_thread.start()
+
+def alarm(alarm_time):
+    while True:
+        current_time = time.strftime("%H:%M")
+        if current_time == alarm_time:
+            play_music()
+            break
+        time.sleep(1)
+
+def play_music():
     mixer.init()
-    mixer.music.load(' clock.mp3')
+    mixer.music.load('clock.mp3')
     mixer.music.play()
-    while mixer.music.get_busy():
-        time.sleep(30)
-        mixer.music.stop()
-        sys.exit()
-                                          
-root=Tk()
-root.title(" Alarm clock")
-canvas=Canvas(root, width=600,height=380)
-image=ImageTk.PhotoImage(Image.open("clock image .png"))
-canvas.create_image(0,0,anchor=NW, image=image)
+    root.after(30000, stop_music)
 
-canvas.pack()
-header=Frame(root)
+def stop_music():
+    mixer.music.stop()
 
-box1=Frame(root)
-box1.place(x=250,y=180)
-box2=Frame(root)
-box2.place(x=250,y=180)
- #time taken by user
- #helv36 = tkFont.Font(family="Helvetica",size=36,weight="bold")
- 
+# GUI setup
+root = tk.Tk()
+root.title("Alarm Clock")
 
-user_input=Entry(box1,font=('ArialNarrow', 20),width=8)
-user_input.grid(row=0, column=2)
+# Load and display an image
+img = Image.open("clock image .png")  
+photo = ImageTk.PhotoImage(img)
+image_label = Label(root, image=photo)
+image_label.image = photo 
+image_label.pack() # Keep a reference to avoid garbage collection
 
-#set alarm button 
-start_button = Button( )
+
+label = Label(root, text="Enter alarm time (HH:MM):")
+label.pack()
+
+user_input = Entry(root)
+user_input.pack()
+
+alarm_button = Button(root, text="Set Alarm", command=set_alarm)
+alarm_button.pack()
+
 root.mainloop()
-
-
-#done
-
