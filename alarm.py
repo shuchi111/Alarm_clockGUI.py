@@ -36,7 +36,7 @@ root = tk.Tk()
 root.title("Alarm Clock")
 
 # Load and display an image
-img = Image.open("clock image .png")  
+img = Image.open("clock_image .png")  
 photo = ImageTk.PhotoImage(img)
 image_label = Label(root, image=photo)
 image_label.image = photo 
